@@ -32,35 +32,35 @@ IMPLEMENT_STANDARD_RTTIEXT(IVtkVTK_ShapeData, IVtk_IShapeData)
 
 //================================================================
 // Function : Constructor
-// Purpose  : 
+// Purpose  :
 //================================================================
 IVtkVTK_ShapeData::IVtkVTK_ShapeData()
- : myPolyData( vtkPolyData::New() )
+ : myPolyData()
+ , mySubShapeIDs()
+ , myMeshTypes()
 {
   myPolyData->Allocate();
-  myPolyData->SetPoints (vtkPoints::New());
+  myPolyData->SetPoints(vtkNew<vtkPoints>().Get());
 
-  mySubShapeIDs = vtkIdTypeArray::New();
   mySubShapeIDs->SetName (IVtkVTK_ShapeData::ARRNAME_SUBSHAPE_IDS);
   mySubShapeIDs->SetNumberOfComponents (1);
-  myPolyData->GetCellData()->AddArray (mySubShapeIDs);
+  myPolyData->GetCellData()->AddArray (mySubShapeIDs.Get());
 
-  myMeshTypes = vtkIdTypeArray::New();
   myMeshTypes->SetName (IVtkVTK_ShapeData::ARRNAME_MESH_TYPES);
   myMeshTypes->SetNumberOfComponents (1);
-  myPolyData->GetCellData()->AddArray (myMeshTypes);
+  myPolyData->GetCellData()->AddArray (myMeshTypes.Get());
 }
 
 //================================================================
 // Function : Destructor
-// Purpose  : 
+// Purpose  :
 //================================================================
 IVtkVTK_ShapeData::~IVtkVTK_ShapeData()
 { }
 
 //================================================================
 // Function : InsertCoordinate
-// Purpose  : 
+// Purpose  :
 //================================================================
 IVtk_PointId IVtkVTK_ShapeData::InsertCoordinate (double theX,
                                                   double theY,
@@ -71,7 +71,7 @@ IVtk_PointId IVtkVTK_ShapeData::InsertCoordinate (double theX,
 
 //================================================================
 // Function : InsertVertex
-// Purpose  : 
+// Purpose  :
 //================================================================
 void IVtkVTK_ShapeData::InsertVertex (const IVtk_IdType theShapeID,
                                       const IVtk_PointId thePointId,

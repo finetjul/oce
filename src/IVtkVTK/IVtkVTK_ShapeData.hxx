@@ -17,6 +17,8 @@
 #define __IVTKVTK_SHAPEDATA_H__
 
 #include <IVtk_IShapeData.hxx>
+#include <vtkNew.h>
+#include <vtkPolyData.h>
 #include <vtkType.h>
 #include <vtkSmartPointer.h>
 
@@ -106,12 +108,12 @@ public: //! @name Specific methods
   //! Get VTK PolyData.
   //! @return VTK PolyData
   vtkSmartPointer< vtkPolyData > getVtkPolyData() const
-  { return myPolyData; }
+  { return vtkSmartPointer< vtkPolyData >(myPolyData.Get()); }
 
 private:
-  vtkSmartPointer< vtkPolyData >    myPolyData;    //!< Shape geometry as vtkPolyData
-  vtkSmartPointer< vtkIdTypeArray > mySubShapeIDs; //!< Array of sub-shapes ids
-  vtkSmartPointer< vtkIdTypeArray > myMeshTypes;   //!< Array of type codes of mesh parts
+  vtkNew< vtkPolyData >    myPolyData;    //!< Shape geometry as vtkPolyData
+  vtkNew< vtkIdTypeArray > mySubShapeIDs; //!< Array of sub-shapes ids
+  vtkNew< vtkIdTypeArray > myMeshTypes;   //!< Array of type codes of mesh parts
 };
 
 #endif // __IVTKVTK_SHAPEDATA_H__
