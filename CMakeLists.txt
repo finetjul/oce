@@ -325,14 +325,18 @@ if(OCE_DRAW AND NOT OCE_VISUALISATION)
 endif(OCE_DRAW AND NOT OCE_VISUALISATION)
 
 if(OCE_VISUALISATION AND OCE_WITH_VTK)
-	find_package(VTK COMPONENTS
+	set(vtk_components
 		vtkCommonCore
 		vtkInteractionStyle
 		vtkIOExport
 		vtkIOLegacy
-		vtkRenderingFreeTypeOpenGL
 		vtkRenderingOpenGL
 		)
+	find_package(VTK COMPONENTS ${vtk_components})
+	if (TARGET vtkRenderingFreeTypeOpenGL)
+		list(APPEND vtk_components vtkRenderingFreeTypeOpenGL)
+		find_package(VTK COMPONENTS ${vtk_components})
+	endif()
 endif()
 
 set(INSTALL_STDRESOURCE_FILES)
