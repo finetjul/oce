@@ -154,6 +154,7 @@ option_with_default( OCE_WITH_OPENCL "OpenCL support for shaders and raytracing"
 option_with_default( OCE_WITH_GL2PS "Build with GL2PS" OFF )
 option_with_default( OCE_WITH_FREEIMAGE "Build with FreeImage" OFF )
 option_with_default( OCE_WITH_VTK "Build with VTK" OFF )
+option_with_default( OCE_VTK_OPENGL2_BACKEND "Use VTK OpenGL2 backend" OFF )
 option_with_default( OCE_DISABLE_TKSERVICE_FONT "Disable TKService Font (only without Visualization)" OFF )
 mark_as_advanced(OCE_DISABLE_TKSERVICE_FONT)
 if(NOT WIN32)
@@ -356,13 +357,17 @@ if(OCE_VISUALISATION AND OCE_WITH_VTK)
 		vtkInteractionStyle
 		vtkIOExport
 		vtkIOLegacy
-		vtkRenderingOpenGL
 		)
-	find_package(VTK COMPONENTS ${vtk_components})
+	if(OCE_VTK_OPENGL2_BACKEND)
+		add_definitions(-DOCE_VTK_OPENGL2_BACKEND)
+		list(APPEND vtk_components vtkRenderingOpenGL2)
+	else()
+		list(APPEND vtk_components vtkRenderingOpenGL)
+	endif()
 	if (TARGET vtkRenderingFreeTypeOpenGL)
 		list(APPEND vtk_components vtkRenderingFreeTypeOpenGL)
-		find_package(VTK COMPONENTS ${vtk_components})
 	endif()
+	find_package(VTK COMPONENTS ${vtk_components} REQUIRED)
 endif()
 
 set(INSTALL_STDRESOURCE_FILES)
